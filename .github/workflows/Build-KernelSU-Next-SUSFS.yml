@@ -105,6 +105,14 @@ jobs:
            cp ../kernel_patches/selinux.c_fix.patch ./
            patch -p1 -F 3 < selinux.c_fix.patch
            
+      - name: Configure kernel for ThinLTO
+        run: |
+         cd kernel_workspace/kernel_platform
+         make ARCH=arm64 defconfig
+         scripts/config --file .config -e CONFIG_LTO
+         scripts/config --file .config -e CONFIG_THINLTO
+         make ARCH=arm64 olddefconfig
+        
       - name: Build kernel
         run: |
          cd kernel_workspace
